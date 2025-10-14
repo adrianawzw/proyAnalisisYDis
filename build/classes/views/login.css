@@ -1,0 +1,47 @@
+.parent{
+    -fx-background-color: white;
+}
+
+.sidebar{
+    -fx-background-color: #a9b5d9;
+}
+
+.forgetBtn{
+    -fx-text-fill: #a3a3a3;
+}
+
+.forgetBtn:hover{
+    -fx-text-fill: #8c93a9;
+}
+
+.loginBtn{
+    -fx-background-color: #8c93a9;
+    -fx-text-fill:#fff;
+    -fx-background-radius:3px;
+}
+
+.loginBtn:hover{
+    -fx-background-color: transparent;
+    -fx-background-radius:3px;
+    -fx-text-fill:#8c93a9;
+    -fx-border-color:#8c93a9;
+    -fx-border-width:1px;
+    -fx-border-style:solid;
+    -fx-border-radius:3px;
+}
+
+.closeBtn{
+    -fx-fill:#545454;
+}
+
+.closeBtn:hover{
+    -fx-fill:#663300;
+}
+
+
+.backBtn{
+    -fx-fill:#545454;
+}
+.backBtn:hover{
+    -fx-fill:#a3a3a3;
+}
