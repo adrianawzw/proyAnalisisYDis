@@ -126,7 +126,7 @@
                                 <Font name="Century Gothic" size="13.0" />
                             </font>
                         </Label>
-                        <Label text="USUARIO">
+                        <Label text="USUARIO!">
                             <font>
                                 <Font name="Century Gothic Bold" size="15.0" />
                             </font>
@@ -139,7 +139,7 @@
                             <children>
                                 <VBox layoutX="63.0" layoutY="150.0" prefHeight="210.0" prefWidth="480.0">
                                     <children>
-                                        <Label fx:id="olaa" text="Dashboard main">
+                                        <Label fx:id="olaa" text="Dashboard ">
                                             <font>
                                                 <Font name="Century Gothic Bold" size="15.0" />
                                             </font>
@@ -349,7 +349,6 @@
                                         <String fx:value="white-bg" />
                                     </styleClass>
                                     <children>
-                                        <TextField fx:id="mov_prodid" layoutX="180.0" layoutY="40.0" prefHeight="25.0" prefWidth="138.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5px;" />
                                         <TextField fx:id="mov_cant" layoutX="180.0" layoutY="80.0" prefHeight="25.0" prefWidth="138.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5px;" />
                                         <ComboBox fx:id="mov_tipo" layoutX="180.0" layoutY="119.0" prefHeight="32.0" prefWidth="140.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5px;" />
                                         <Label layoutX="40.0" layoutY="45.0" text="Producto/Recurso ID:">
@@ -373,12 +372,13 @@
                                                 <Font name="Century Gothic Bold" size="18.0" />
                                             </font>
                                         </Label>
-                              <TextField fx:id="mov_area" layoutX="180.0" layoutY="162.0" prefHeight="25.0" prefWidth="138.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5px;" />
                               <Label layoutX="40.0" layoutY="166.0" text="Área destino:">
                                  <font>
                                     <Font name="Segoe UI" size="14.0" />
                                  </font>
                               </Label>
+                              <ComboBox fx:id="mov_producto" layoutX="175.0" layoutY="42.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5px;" />
+                              <ComboBox fx:id="mov_area" layoutX="175.0" layoutY="161.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5px;" />
                                     </children>
                                 </Pane>
                         <Pane layoutX="24.0" layoutY="233.0" prefHeight="270.0" prefWidth="558.0">

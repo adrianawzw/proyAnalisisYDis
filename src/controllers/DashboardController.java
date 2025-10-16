@@ -44,7 +44,6 @@ import models.*;
 
 public class DashboardController implements Initializable {
 
-    private Pane panel_registrar;
     @FXML
     private HBox btn_home;
     @FXML
@@ -102,13 +101,11 @@ public class DashboardController implements Initializable {
     @FXML
     private TableColumn<?, ?> productos_col_smax;
     @FXML
-    private TextField mov_prodid;
-    @FXML
     private TextField mov_cant;
     @FXML
-    private ComboBox<?> mov_tipo;
+    private ComboBox<String> mov_tipo;
     @FXML
-    private TextField mov_area;
+    private ComboBox<Area> mov_area;
     @FXML
     private TableColumn<?, ?> mov_col_id;
     @FXML
@@ -143,6 +140,8 @@ public class DashboardController implements Initializable {
     private Pane panel_movimientos;
     @FXML
     private TableView<Proveedor> proveedores_tabla;
+    @FXML
+    private ComboBox<Producto> mov_producto;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -162,6 +161,13 @@ public class DashboardController implements Initializable {
         configurarCbxProd();
         configurarTablaProductos();
         configurarComboBoxUnidades();
+        
+        /*inicializar movimientos*/
+        areaDAO = new AreaDAO();
+        
+        mov_tipo.getItems().addAll("ENTRADA", "SALIDA");
+        
+        cargarAreas();
     }
 
     /*obj para proveedores*/
@@ -175,6 +181,9 @@ public class DashboardController implements Initializable {
     private ObservableList<String> unidadesData;
     private Producto productoSeleccionado;
 
+    /*obj para movimientos*/
+    private AreaDAO areaDAO;
+    
     // Agrega estas variables
     private byte[] imagenSeleccionadaData;
 
@@ -585,6 +594,26 @@ public class DashboardController implements Initializable {
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
         productosData.addAll(productos);
         prov_prod.setItems(productosData);
+        
+        mov_producto.getItems().clear();
+        mov_producto.getItems().addAll(productos);
+        
+        // Opcional: configurar cómo se muestra el producto en el ComboBox
+        mov_producto.setCellFactory(lv -> new ListCell<Producto>() {
+            @Override
+            protected void updateItem(Producto item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getNombre());
+            }
+        });
+        
+        mov_producto.setButtonCell(new ListCell<Producto>() {
+            @Override
+            protected void updateItem(Producto item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getNombre());
+            }
+        });
     }
 
     @FXML
@@ -736,5 +765,28 @@ public class DashboardController implements Initializable {
         alerta.setHeaderText(null);
         alerta.setContentText(mensaje);
         alerta.showAndWait();
+    }
+    
+    /*formulario/panel de movimientos*/
+    private void cargarAreas() {
+        List<Area> areas = areaDAO.obtenerTodasLasAreas();
+        mov_area.getItems().clear();
+        mov_area.getItems().addAll(areas);
+        
+        /*mov_area.setCellFactory(lv -> new ListCell<Area>() {
+            @Override
+            protected void updateItem(Area item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getNombreArea());
+            }
+        });
+        
+        mov_area.setButtonCell(new ListCell<Area>() {
+            @Override
+            protected void updateItem(Area item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getNombreArea());
+            }
+        });*/
     }
 }
