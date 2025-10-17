@@ -142,6 +142,8 @@ public class DashboardController implements Initializable {
     private TableView<Proveedor> proveedores_tabla;
     @FXML
     private ComboBox<Producto> mov_producto;
+    @FXML
+    private TableView<Movimiento> movimientos_tabla;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -161,13 +163,17 @@ public class DashboardController implements Initializable {
         configurarCbxProd();
         configurarTablaProductos();
         configurarComboBoxUnidades();
-        
+
         /*inicializar movimientos*/
         areaDAO = new AreaDAO();
-        
+        movimientoDAO = new MovimientoDAO();
+        movimientosData = FXCollections.observableArrayList();
+
         mov_tipo.getItems().addAll("ENTRADA", "SALIDA");
-        
+
         cargarAreas();
+        cargarMovimientos();
+        configurarTablaMovimientos();
     }
 
     /*obj para proveedores*/
@@ -183,7 +189,12 @@ public class DashboardController implements Initializable {
 
     /*obj para movimientos*/
     private AreaDAO areaDAO;
-    
+
+    /*obj para movimientos*/
+    private MovimientoDAO movimientoDAO;
+    private ObservableList<Movimiento> movimientosData;
+    private Usuario usuarioLogueado; // 
+
     // Agrega estas variables
     private byte[] imagenSeleccionadaData;
 
@@ -254,6 +265,11 @@ public class DashboardController implements Initializable {
         }
     }
 
+    public void setUsuarioLogueado(Usuario usuario) {
+        this.usuarioLogueado = usuario;
+        System.out.println("Usuario recibido en Dashboard: " + usuario.getNombre() + " " + usuario.getApellido());
+    }
+
     /*crud productos*/
     private void configurarTablaProductos() {
         productos_col_id.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
@@ -268,6 +284,18 @@ public class DashboardController implements Initializable {
         productos_tabla.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> seleccionarProducto(newValue)
         );
+    }
+
+    private void configurarTablaMovimientos() {
+        mov_col_id.setCellValueFactory(new PropertyValueFactory<>("idMov"));
+        mov_col_fecha.setCellValueFactory(new PropertyValueFactory<>("fechaMov"));
+        mov_col_tipo.setCellValueFactory(new PropertyValueFactory<>("tipoMov"));
+        mov_col_respon.setCellValueFactory(new PropertyValueFactory<>("nombreUsuario"));
+        mov_col_prod.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
+        mov_col_cant.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+
+        movimientos_tabla.setItems(movimientosData);
+
     }
 
     private void configurarComboBoxUnidades() {
@@ -459,7 +487,6 @@ public class DashboardController implements Initializable {
             productos_smin.setText(String.valueOf(producto.getStockMin()));
             productos_smax.setText(String.valueOf(producto.getStockMax()));
 
-            // Cargar la imagen desde los datos BLOB
             if (producto.getImagenFX() != null) {
                 productos_imagen.setImage(producto.getImagenFX());
                 imagenSeleccionadaData = producto.getImagenData();
@@ -468,34 +495,29 @@ public class DashboardController implements Initializable {
                 imagenSeleccionadaData = null;
             }
 
-            // El campo ID debe ser de solo lectura cuando se selecciona un producto
             productos_id.setEditable(false);
         }
     }
 
     private boolean validarCamposProducto() {
-        // Validar nombre
         if (productos_nombre.getText().isEmpty()) {
             mostrarAlerta("Error", "El nombre del producto es obligatorio", Alert.AlertType.ERROR);
             productos_nombre.requestFocus();
             return true;
         }
 
-        // Validar unidad
         if (productos_uni.getValue() == null) {
             mostrarAlerta("Error", "Debe seleccionar una unidad", Alert.AlertType.ERROR);
             productos_uni.requestFocus();
             return true;
         }
 
-        // Validar stock mínimo
         if (productos_smin.getText().isEmpty()) {
             mostrarAlerta("Error", "El stock mínimo es obligatorio", Alert.AlertType.ERROR);
             productos_smin.requestFocus();
             return true;
         }
 
-        // Validar stock máximo
         if (productos_smax.getText().isEmpty()) {
             mostrarAlerta("Error", "El stock máximo es obligatorio", Alert.AlertType.ERROR);
             productos_smax.requestFocus();
@@ -535,12 +557,6 @@ public class DashboardController implements Initializable {
         productos_id.setEditable(false);
     }
 
-    //form stock
-    @FXML
-    private void registrarMovimientoStock(ActionEvent event) {
-
-    }
-
     private void configurarTablaProv() {
         prov_col_id.setCellValueFactory(new PropertyValueFactory<>("idProveedor"));
         prov_col_nom.setCellValueFactory(new PropertyValueFactory<>("nombreProv"));
@@ -557,7 +573,6 @@ public class DashboardController implements Initializable {
     }
 
     private void configurarCbxProd() {
-        // Configurar cómo se muestran los productos en el ComboBox
         prov_prod.setCellFactory(param -> new ListCell<Producto>() {
             @Override
             protected void updateItem(Producto item, boolean empty) {
@@ -594,11 +609,11 @@ public class DashboardController implements Initializable {
         List<Producto> productos = productoDAO.obtenerTodosLosProductos();
         productosData.addAll(productos);
         prov_prod.setItems(productosData);
-        
+
         mov_producto.getItems().clear();
         mov_producto.getItems().addAll(productos);
-        
-        // Opcional: configurar cómo se muestra el producto en el ComboBox
+
+        //configurar cómo se muestra el producto en el ComboBox
         mov_producto.setCellFactory(lv -> new ListCell<Producto>() {
             @Override
             protected void updateItem(Producto item, boolean empty) {
@@ -606,7 +621,7 @@ public class DashboardController implements Initializable {
                 setText(empty ? "" : item.getNombre());
             }
         });
-        
+
         mov_producto.setButtonCell(new ListCell<Producto>() {
             @Override
             protected void updateItem(Producto item, boolean empty) {
@@ -614,6 +629,12 @@ public class DashboardController implements Initializable {
                 setText(empty ? "" : item.getNombre());
             }
         });
+    }
+    
+    private void cargarMovimientos() {
+        movimientosData.clear();
+        List<Movimiento> movimientos = movimientoDAO.obtenerTodosLosMovimientos();
+        movimientosData.addAll(movimientos);
     }
 
     @FXML
@@ -675,7 +696,6 @@ public class DashboardController implements Initializable {
             mostrarAlerta("Advertencia", "Seleccione un proveedor para actualizar", Alert.AlertType.WARNING);
             return;
         }
-
         if (validarCamposProveedor()) {
             return;
         }
@@ -724,7 +744,6 @@ public class DashboardController implements Initializable {
             prov_telefono.setText(proveedor.getTelefono());
             prov_dir.setText(proveedor.getDireccion());
 
-            // Seleccionar el producto en el ComboBox
             if (proveedor.getIdProducto() > 0) {
                 Producto productoSeleccionado = productosData.stream()
                         .filter(p -> p.getIdProducto() == proveedor.getIdProducto())
@@ -742,7 +761,6 @@ public class DashboardController implements Initializable {
             mostrarAlerta("Error", "Nombre y RUC son campos obligatorios", Alert.AlertType.ERROR);
             return true;
         }
-
         if (!prov_ruc.getText().matches("\\d{11}")) {
             mostrarAlerta("Error", "El RUC debe tener 11 dígitos", Alert.AlertType.ERROR);
             return true;
@@ -766,27 +784,103 @@ public class DashboardController implements Initializable {
         alerta.setContentText(mensaje);
         alerta.showAndWait();
     }
-    
+
     /*formulario/panel de movimientos*/
     private void cargarAreas() {
         List<Area> areas = areaDAO.obtenerTodasLasAreas();
         mov_area.getItems().clear();
         mov_area.getItems().addAll(areas);
-        
-        /*mov_area.setCellFactory(lv -> new ListCell<Area>() {
-            @Override
-            protected void updateItem(Area item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? "" : item.getNombreArea());
+    }
+
+    @FXML
+    private void registrarMovimientoStock(ActionEvent event) {
+        try {
+            if (mov_producto.getValue() == null) {
+                mostrarAlerta("Error", "Debe seleccionar un producto", Alert.AlertType.ERROR);
+                return;
             }
-        });
-        
-        mov_area.setButtonCell(new ListCell<Area>() {
-            @Override
-            protected void updateItem(Area item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? "" : item.getNombreArea());
+            if (mov_area.getValue() == null) {
+                mostrarAlerta("Error", "Debe seleccionar un área destino", Alert.AlertType.ERROR);
+                return;
             }
-        });*/
+            if (mov_tipo.getValue() == null) {
+                mostrarAlerta("Error", "Debe seleccionar un tipo de movimiento", Alert.AlertType.ERROR);
+                return;
+            }
+            if (mov_cant.getText().isEmpty()) {
+                mostrarAlerta("Error", "Debe ingresar una cantidad", Alert.AlertType.ERROR);
+                return;
+            }
+
+            int cantidad;
+            try {
+                cantidad = Integer.parseInt(mov_cant.getText());
+                if (cantidad <= 0) {
+                    mostrarAlerta("Error", "La cantidad debe ser mayor a 0", Alert.AlertType.ERROR);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                mostrarAlerta("Error", "La cantidad debe ser un número válido", Alert.AlertType.ERROR);
+                return;
+            }
+
+            Producto productoSeleccionado = mov_producto.getValue();
+            Area areaSeleccionada = mov_area.getValue();
+            String tipoMovimiento = mov_tipo.getValue();
+
+            if (tipoMovimiento.equals("SALIDA") && productoSeleccionado.getStockActual() < cantidad) {
+                mostrarAlerta("Error", "Stock insuficiente. Stock actual: " + productoSeleccionado.getStockActual(), Alert.AlertType.ERROR);
+                return;
+            }
+
+            int nuevoStock = productoSeleccionado.getStockActual();
+            if (tipoMovimiento.equals("ENTRADA")) {
+                nuevoStock += cantidad;
+            } else {
+                nuevoStock -= cantidad;
+            }
+
+            // actualizar stock en la base de datos
+            boolean stockActualizado = productoDAO.actualizarStock(productoSeleccionado.getIdProducto(), nuevoStock);
+
+            if (!stockActualizado) {
+                mostrarAlerta("Error", "No se pudo actualizar el stock del producto", Alert.AlertType.ERROR);
+                return;
+            }
+            // Registrar el movimiento
+            Movimiento movimiento = new Movimiento();
+            movimiento.setFechaMov(new Date());
+            movimiento.setTipoMov(tipoMovimiento);
+            movimiento.setCantidad(cantidad);
+            movimiento.setIdProducto(productoSeleccionado.getIdProducto());
+            movimiento.setIdArea(areaSeleccionada.getIdArea());
+            movimiento.setIdUsuario(usuarioLogueado.getIdUsuario()); 
+
+            boolean movimientoRegistrado = movimientoDAO.registrarMovimiento(movimiento);
+
+            if (movimientoRegistrado) {
+                mostrarAlerta("Éxito", "Movimiento registrado correctamente", Alert.AlertType.INFORMATION);
+
+                cargarMovimientos();
+                productoSeleccionado.setStockActual(nuevoStock);
+                limpiarCamposMovimiento();
+
+            } else {
+                mostrarAlerta("Error", "No se pudo registrar el movimiento", Alert.AlertType.ERROR);
+                productoDAO.actualizarStock(productoSeleccionado.getIdProducto(), productoSeleccionado.getStockActual());
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error en registrarMovimientoStock: " + e.getMessage());
+            e.printStackTrace();
+            mostrarAlerta("Error", "Ocurrió un error al registrar el movimiento", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void limpiarCamposMovimiento() {
+        mov_producto.setValue(null);
+        mov_area.setValue(null);
+        mov_tipo.setValue(null);
+        mov_cant.clear();
     }
 }

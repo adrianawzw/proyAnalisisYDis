@@ -14,12 +14,13 @@ import java.util.List;
 import javafx.scene.image.Image;
 
 public class ProductoDAO {
+
     private DBConnection dbConnection;
 
     public ProductoDAO() {
         this.dbConnection = DBConnection.getInstance();
     }
-    
+
     public List<Producto> obtenerTodosLosProductos() {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT * FROM producto ORDER BY id_producto";
@@ -27,7 +28,7 @@ public class ProductoDAO {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = dbConnection.getConnection();
             stmt = conn.createStatement();
@@ -42,8 +43,12 @@ public class ProductoDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
             } catch (Exception e) {
                 System.err.println("Error cerrando recursos: " + e.getMessage());
             }
@@ -56,7 +61,7 @@ public class ProductoDAO {
 
         Connection conn = null;
         PreparedStatement stmt = null;
-        
+
         try {
             conn = dbConnection.getConnection();
             stmt = conn.prepareStatement(sql);
@@ -66,7 +71,7 @@ public class ProductoDAO {
             stmt.setInt(4, producto.getStockMax());
             stmt.setInt(5, producto.getStockMin());
             stmt.setInt(6, producto.getStockActual());
-            
+
             if (producto.getImagenData() != null) {
                 stmt.setBlob(7, new ByteArrayInputStream(producto.getImagenData()), producto.getImagenData().length);
             } else {
@@ -81,7 +86,9 @@ public class ProductoDAO {
             return false;
         } finally {
             try {
-                if (stmt != null) stmt.close();
+                if (stmt != null) {
+                    stmt.close();
+                }
             } catch (Exception e) {
                 System.err.println("Error cerrando PreparedStatement: " + e.getMessage());
             }
@@ -93,7 +100,7 @@ public class ProductoDAO {
 
         Connection conn = null;
         PreparedStatement stmt = null;
-        
+
         try {
             conn = dbConnection.getConnection();
             stmt = conn.prepareStatement(sql);
@@ -103,13 +110,13 @@ public class ProductoDAO {
             stmt.setInt(4, producto.getStockMax());
             stmt.setInt(5, producto.getStockMin());
             stmt.setInt(6, producto.getStockActual());
-            
+
             if (producto.getImagenData() != null) {
                 stmt.setBlob(7, new ByteArrayInputStream(producto.getImagenData()), producto.getImagenData().length);
             } else {
                 stmt.setNull(7, java.sql.Types.BLOB);
             }
-            
+
             stmt.setInt(8, producto.getIdProducto());
 
             int filasAfectadas = stmt.executeUpdate();
@@ -120,7 +127,9 @@ public class ProductoDAO {
             return false;
         } finally {
             try {
-                if (stmt != null) stmt.close();
+                if (stmt != null) {
+                    stmt.close();
+                }
             } catch (Exception e) {
                 System.err.println("Error cerrando PreparedStatement: " + e.getMessage());
             }
@@ -132,17 +141,17 @@ public class ProductoDAO {
 
         Connection conn = null;
         PreparedStatement stmt = null;
-        
+
         try {
             conn = dbConnection.getConnection();
             stmt = conn.prepareStatement(sql);
-            
+
             if (imagenData != null) {
                 stmt.setBlob(1, new ByteArrayInputStream(imagenData), imagenData.length);
             } else {
                 stmt.setNull(1, java.sql.Types.BLOB);
             }
-            
+
             stmt.setInt(2, idProducto);
 
             int filasAfectadas = stmt.executeUpdate();
@@ -153,7 +162,9 @@ public class ProductoDAO {
             return false;
         } finally {
             try {
-                if (stmt != null) stmt.close();
+                if (stmt != null) {
+                    stmt.close();
+                }
             } catch (Exception e) {
                 System.err.println("Error cerrando PreparedStatement: " + e.getMessage());
             }
@@ -165,7 +176,7 @@ public class ProductoDAO {
 
         Connection conn = null;
         PreparedStatement stmt = null;
-        
+
         try {
             conn = dbConnection.getConnection();
             stmt = conn.prepareStatement(sql);
@@ -179,7 +190,9 @@ public class ProductoDAO {
             return false;
         } finally {
             try {
-                if (stmt != null) stmt.close();
+                if (stmt != null) {
+                    stmt.close();
+                }
             } catch (Exception e) {
                 System.err.println("Error cerrando PreparedStatement: " + e.getMessage());
             }
@@ -193,7 +206,7 @@ public class ProductoDAO {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = dbConnection.getConnection();
             stmt = conn.prepareStatement(sql);
@@ -208,8 +221,12 @@ public class ProductoDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
             } catch (Exception e) {
                 System.err.println("Error cerrando recursos: " + e.getMessage());
             }
@@ -223,7 +240,7 @@ public class ProductoDAO {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = dbConnection.getConnection();
             stmt = conn.prepareStatement(sql);
@@ -238,13 +255,46 @@ public class ProductoDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
             } catch (Exception e) {
                 System.err.println("Error cerrando recursos: " + e.getMessage());
             }
         }
         return false;
+    }
+
+    public boolean actualizarStock(int idProducto, int nuevaCantidad) {
+        String sql = "UPDATE producto SET stock_actual = ? WHERE id_producto = ?";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = dbConnection.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, nuevaCantidad);
+            stmt.setInt(2, idProducto);
+
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;
+        } catch (Exception e) {
+            System.err.println("Error en actualizarStock: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (Exception e) {
+                System.err.println("Error cerrando PreparedStatement: " + e.getMessage());
+            }
+        }
     }
 
     private Producto mapearProducto(ResultSet rs) throws Exception {
@@ -256,13 +306,13 @@ public class ProductoDAO {
         producto.setStockMax(rs.getInt("stock_max"));
         producto.setStockMin(rs.getInt("stock_min"));
         producto.setStockActual(rs.getInt("stock_actual"));
-        
+
         // Obtener datos de la imagen BLOB
         java.sql.Blob blob = rs.getBlob("imagen");
         if (blob != null) {
             byte[] imagenData = blob.getBytes(1, (int) blob.length());
             producto.setImagenData(imagenData);
-            
+
             // Convertir a Image de JavaFX
             if (imagenData != null && imagenData.length > 0) {
                 try {
@@ -273,7 +323,7 @@ public class ProductoDAO {
                 }
             }
         }
-        
+
         return producto;
     }
 

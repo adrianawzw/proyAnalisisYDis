@@ -253,14 +253,14 @@
                               <ComboBox fx:id="prov_prod" layoutX="138.0" layoutY="194.0" prefHeight="27.0" prefWidth="140.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5px;" />
                                     </children>
                                 </Pane>
-                                <TableView fx:id="proveedores_tabla" layoutX="50.0" layoutY="305.0" prefHeight="180.0" prefWidth="506.0">
+                                <TableView fx:id="proveedores_tabla" layoutX="25.0" layoutY="291.0" prefHeight="210.0" prefWidth="556.0">
                                     <columns>
-                                        <TableColumn fx:id="prov_col_id" prefWidth="40.0" text="Id" />
-                                        <TableColumn fx:id="prov_col_nom" prefWidth="87.0" text="Nombre" />
-                                        <TableColumn fx:id="prov_col_ruc" prefWidth="105.0" text="RUC" />
-                                        <TableColumn fx:id="prov_col_tlf" prefWidth="79.0" text="Teléfono" />
-                                        <TableColumn fx:id="prov_col_dir" prefWidth="81.0" text="Dirección" />
-                                        <TableColumn fx:id="prov_col_prod" prefWidth="120.0" text="Producto/Recurso" />
+                                        <TableColumn fx:id="prov_col_id" prefWidth="35.0" text="Id" />
+                                        <TableColumn fx:id="prov_col_nom" prefWidth="100.0" text="Nombre" />
+                                        <TableColumn fx:id="prov_col_ruc" prefWidth="86.0" text="RUC" />
+                                        <TableColumn fx:id="prov_col_tlf" prefWidth="90.0" text="Teléfono" />
+                                        <TableColumn fx:id="prov_col_dir" prefWidth="110.0" text="Dirección" />
+                                        <TableColumn fx:id="prov_col_prod" prefWidth="133.0" text="Producto/Recurso" />
                                     </columns>
                                 </TableView>
                             </children>
@@ -328,14 +328,14 @@
                               <TextField fx:id="productos_smax" layoutX="228.0" layoutY="202.0" prefHeight="27.0" prefWidth="70.0" style="-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 5px;" />
                                     </children>
                                 </Pane>
-                                <TableView fx:id="productos_tabla" layoutX="50.0" layoutY="297.0" prefHeight="180.0" prefWidth="506.0">
+                                <TableView fx:id="productos_tabla" layoutX="30.0" layoutY="294.0" prefHeight="200.0" prefWidth="546.0">
                                     <columns>
-                                        <TableColumn fx:id="productos_col_id" prefWidth="45.0" text="Id" />
-                                        <TableColumn fx:id="productos_col_nombre" prefWidth="93.0" text="Nombre" />
-                                        <TableColumn fx:id="productos_col_desc" prefWidth="141.0" text="Desc." />
-                              <TableColumn fx:id="productos_col_uni" prefWidth="61.0" text="Unidad" />
-                              <TableColumn fx:id="productos_col_smin" prefWidth="85.0" text="S. mín." />
-                              <TableColumn fx:id="productos_col_smax" prefWidth="85.0" text="S. máx." />
+                                        <TableColumn fx:id="productos_col_id" prefWidth="40.0" text="Id" />
+                                        <TableColumn fx:id="productos_col_nombre" prefWidth="114.0" text="Nombre" />
+                                        <TableColumn fx:id="productos_col_desc" prefWidth="131.0" text="Desc." />
+                              <TableColumn fx:id="productos_col_uni" prefWidth="71.0" text="Unidad" />
+                              <TableColumn fx:id="productos_col_smin" prefWidth="91.0" text="S. mín." />
+                              <TableColumn fx:id="productos_col_smax" prefWidth="97.0" text="S. máx." />
                                     </columns>
                                 </TableView>
                             </children>
@@ -393,14 +393,14 @@
                                     <Font name="Century Gothic Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <TableView layoutX="31.0" layoutY="43.0" prefHeight="200.0" prefWidth="496.0">
+                              <TableView fx:id="movimientos_tabla" layoutX="13.0" layoutY="38.0" prefHeight="221.0" prefWidth="533.0">
                                 <columns>
-                                  <TableColumn fx:id="mov_col_id" prefWidth="39.0" text="Id" />
-                                  <TableColumn fx:id="mov_col_fecha" prefWidth="111.0" text="Fecha" />
-                                    <TableColumn fx:id="mov_col_tipo" prefWidth="75.0" text="Tipo mov." />
-                                    <TableColumn fx:id="mov_col_respon" prefWidth="75.0" text="Responsable" />
-                                    <TableColumn fx:id="mov_col_prod" prefWidth="125.0" text="Producto" />
-                                    <TableColumn fx:id="mov_col_cant" prefWidth="70.0" text="Cantidad" />
+                                  <TableColumn fx:id="mov_col_id" prefWidth="34.0" text="Id" />
+                                  <TableColumn fx:id="mov_col_fecha" prefWidth="123.0" text="Fecha" />
+                                    <TableColumn fx:id="mov_col_tipo" prefWidth="76.0" text="Tipo mov." />
+                                    <TableColumn fx:id="mov_col_respon" prefWidth="97.0" text="Responsable" />
+                                    <TableColumn fx:id="mov_col_prod" prefWidth="130.0" text="Producto" />
+                                    <TableColumn fx:id="mov_col_cant" prefWidth="71.0" text="Cantidad" />
                                 </columns>
                               </TableView>
                            </children>

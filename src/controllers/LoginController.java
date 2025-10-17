@@ -76,8 +76,6 @@ public class LoginController implements Initializable {
     private void login(MouseEvent event) {
         String username = txt_username.getText().trim();
         String password = txt_password.getText().trim();
-
-        // primero valida campos
         if (!validarCampos()) {
             return;
         }
@@ -89,28 +87,33 @@ public class LoginController implements Initializable {
             mostrarAlerta(Alert.AlertType.INFORMATION, "Inicio de sesión exitoso",
                     "¡Bienvenido " + usuario.getNombre() + " (" + usuario.getRol() + ")!");
 
-            // cerrar login y abrir dashboard
+            // cerrar login y abrir dashboard PASANDO EL USUARIO
             Stage stage = (Stage) loginBtn.getScene().getWindow();
             stage.close();
-            abrirDashboard();
+            abrirDashboard(usuario); 
         } else {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "Usuario o contraseña incorrectos.");
             txt_password.clear();
         }
     }
 
-    private void abrirDashboard(/*Usuario us*/) {
+    private void abrirDashboard(Usuario usuario) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/dashboard.fxml"));
             Parent root = loader.load();
 
-            Scene scene = new Scene(root);
-            Stage dashStage = new Stage();
-            dashStage.setScene(scene);
-            dashStage.setTitle("Dashboard");
-            dashStage.show();
+            DashboardController dashboardController = loader.getController();
+
+            dashboardController.setUsuarioLogueado(usuario);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Sistema de Inventario - Dashboard");
+            stage.show();
+
         } catch (IOException e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir el dashboard: " + e.getMessage());
+            e.printStackTrace();
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo cargar el dashboard: " + e.getMessage());
         }
     }
 
